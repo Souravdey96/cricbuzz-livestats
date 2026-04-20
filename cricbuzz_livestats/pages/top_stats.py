@@ -1,10 +1,7 @@
 import streamlit as st
-import os
 import sqlite3
 import pandas as pd
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(BASE_DIR, "cricket.db")
+from config.settings import DB_PATH
 
 def main():
     st.markdown("""

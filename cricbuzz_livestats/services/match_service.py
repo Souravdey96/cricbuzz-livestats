@@ -3,15 +3,17 @@ import requests
 import json
 import time
 import datetime
-from config.settings import DB_URL
+from config.settings import RAPIDAPI_KEY
 
 HEADERS = {
-    "X-RapidAPI-Key": os.getenv("RAPIDAPI_KEY"),
+    "X-RapidAPI-Key": RAPIDAPI_KEY,
     "X-RapidAPI-Host": "cricbuzz-cricket.p.rapidapi.com"
 }
 
 CACHE_DIR = "raw_cache"
 LOG_FILE = os.path.join(CACHE_DIR, "api_call_log.json")
+
+os.makedirs(CACHE_DIR, exist_ok=True)
 
 def load_log():
     if os.path.exists(LOG_FILE):
@@ -45,6 +47,9 @@ def make_api_call(url, cache_key):
     if os.path.exists(cache_file):
         with open(cache_file, 'r') as f:
             return json.load(f)
+    if not RAPIDAPI_KEY:
+        print("RAPIDAPI_KEY is missing. Returning cached/empty data.")
+        return None
     if not check_and_update_log():
         return None
     try:

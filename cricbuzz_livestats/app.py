@@ -1,12 +1,19 @@
 import streamlit as st
 
 from pages import crud_operations, home, live_matches, sql_queries, top_stats
+from config.settings import RAPIDAPI_KEY
+from utils.db_connection import ensure_database_ready
 
 st.set_page_config(
     page_title="CricBuzz LiveStats",
     page_icon="🏏",
     layout="wide",
 )
+
+ensure_database_ready()
+
+if not RAPIDAPI_KEY:
+    st.info("`RAPIDAPI_KEY` is not configured. Live API features may show cached data only.")
 
 st.markdown(
     """

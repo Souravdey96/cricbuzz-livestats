@@ -159,7 +159,7 @@ def main():
         elif update_type == "Match":
             try:
                 conn = sqlite3.connect(DB_PATH)
-                matches = conn.execute("SELECT id, match_desc, team1, team2 FROM matches").fetchall()
+                matches = conn.execute("SELECT match_id, match_desc, team1, team2 FROM matches").fetchall()
                 conn.close()
                 
                 match_options = {f"{m[1]}: {m[2]} vs {m[3]} (ID: {m[0]})": m[0] for m in matches}
@@ -180,7 +180,7 @@ def main():
                         if submitted:
                             try:
                                 conn = sqlite3.connect(DB_PATH)
-                                conn.execute("UPDATE matches SET winner=?, victory_margin=?, victory_type=? WHERE id=?",
+                                conn.execute("UPDATE matches SET winner=?, victory_margin=?, victory_type=? WHERE match_id=?",
                                            (winner, victory_margin, victory_type, match_id))
                                 conn.commit()
                                 conn.close()
@@ -224,7 +224,7 @@ def main():
         elif delete_type == "Match":
             try:
                 conn = sqlite3.connect(DB_PATH)
-                matches = conn.execute("SELECT id, match_desc, team1, team2 FROM matches").fetchall()
+                matches = conn.execute("SELECT match_id, match_desc, team1, team2 FROM matches").fetchall()
                 conn.close()
                 
                 match_options = {f"{m[1]}: {m[2]} vs {m[3]} (ID: {m[0]})": m[0] for m in matches}
@@ -234,7 +234,7 @@ def main():
                     match_id = match_options[selected_match]
                     try:
                         conn = sqlite3.connect(DB_PATH)
-                        conn.execute("DELETE FROM matches WHERE id=?", (match_id,))
+                        conn.execute("DELETE FROM matches WHERE match_id=?", (match_id,))
                         conn.commit()
                         conn.close()
                         st.markdown('<div class="success-banner">✅ Match deleted successfully!</div>', unsafe_allow_html=True)
