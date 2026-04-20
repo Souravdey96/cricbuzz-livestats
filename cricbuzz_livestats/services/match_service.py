@@ -17,13 +17,20 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 def load_log():
     if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, 'r') as f:
-            return json.load(f)
+        try:
+            with open(LOG_FILE, 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading log: {e}")
+            return {"total_calls_made": 0, "last_call_timestamp": "", "calls_this_month": 0}
     return {"total_calls_made": 0, "last_call_timestamp": "", "calls_this_month": 0}
 
 def save_log(log):
-    with open(LOG_FILE, 'w') as f:
-        json.dump(log, f)
+    try:
+        with open(LOG_FILE, 'w') as f:
+            json.dump(log, f)
+    except Exception as e:
+        print(f"Error saving log: {e}")
 
 def check_and_update_log():
     log = load_log()
@@ -45,8 +52,15 @@ def check_and_update_log():
 def make_api_call(url, cache_key):
     cache_file = os.path.join(CACHE_DIR, f"{cache_key}.json")
     if os.path.exists(cache_file):
-        with open(cache_file, 'r') as f:
-            return json.load(f)
+        try:
+            with open(cache_file, 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading cache for {cache_key}: {e}")
+            try:
+                os.remove(cache_file)
+            except:
+                pass
     if not RAPIDAPI_KEY:
         print("RAPIDAPI_KEY is missing. Returning cached/empty data.")
         return None
@@ -57,8 +71,11 @@ def make_api_call(url, cache_key):
         response = requests.get(url, headers=HEADERS)
         response.raise_for_status()
         data = response.json()
-        with open(cache_file, 'w') as f:
-            json.dump(data, f)
+        try:
+            with open(cache_file, 'w') as f:
+                json.dump(data, f)
+        except Exception as e:
+            print(f"Error saving cache for {cache_key}: {e}")
         return data
     except Exception as e:
         print(f"API call failed: {e}")
