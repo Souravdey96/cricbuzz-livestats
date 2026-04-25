@@ -2,6 +2,7 @@
 
 A comprehensive cricket analytics dashboard built with Python and Streamlit, integrating live data from the Cricbuzz API with a SQLite database.
 
+Deployment Link: https://cricbuzz-livestats-mzkwjjjhqfdqqevwzxcfsr.streamlit.app/?page=sql
 ---
 
 ## 📌 Project Overview
